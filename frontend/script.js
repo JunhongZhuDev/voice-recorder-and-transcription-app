@@ -1,40 +1,81 @@
+// -------------------------
+// script.js
+// -------------------------
+
 let mediaRecorder;
 let audioChunks = [];
 
 const startBtn = document.getElementById("start");
 const stopBtn = document.getElementById("stop");
+const audioPlayback = document.getElementById("audioPlayback");
+const resultDisplay = document.getElementById("result");
 
+// -------------------------
+// Start recording
+// -------------------------
 startBtn.onclick = async () => {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  try {
+    // Request microphone access
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-  mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder = new MediaRecorder(stream);
 
-  mediaRecorder.ondataavailable = (event) => {
-    audioChunks.push(event.data);
-  };
+    // Store audio data chunks
+    mediaRecorder.ondataavailable = (event) => {
+      audioChunks.push(event.data);
+    };
 
-  mediaRecorder.onstop = async () => {
-    const blob = new Blob(audioChunks, { type: "audio/webm" });
+    // When recording stops
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(audioChunks, { type: "audio/webm" });
 
-    const formData = new FormData();
-    formData.append("file", blob, "recording.webm");
+      // Create playback URL
+      const audioUrl = URL.createObjectURL(blob);
+      audioPlayback.src = audioUrl;
 
-    await fetch("http://localhost:5000/upload", {
-      method: "POST",
-      body: formData
-    });
+      // Upload audio to backend
+      const formData = new FormData();
+      formData.append("file", blob, "recording.webm");
 
-    audioChunks = [];
-    alert("Uploaded!");
-  };
+      resultDisplay.innerText = "Transcribing... please wait.";
 
-  mediaRecorder.start();
-  startBtn.disabled = true;
-  stopBtn.disabled = false;
+      try {
+        const response = await fetch("http://127.0.0.1:5000/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          resultDisplay.innerText = data.text || "No transcription available.";
+        } else {
+          resultDisplay.innerText = "Error: " + (data.error || "Unknown error");
+        }
+      } catch (err) {
+        resultDisplay.innerText = "Error connecting to server: " + err;
+      }
+
+      // Clear chunks for next recording
+      audioChunks = [];
+    };
+
+    mediaRecorder.start();
+    startBtn.disabled = true;
+    stopBtn.disabled = false;
+    resultDisplay.innerText = "Recording...";
+  } catch (err) {
+    alert("Microphone access denied or not available: " + err);
+  }
 };
 
+// -------------------------
+// Stop recording
+// -------------------------
 stopBtn.onclick = () => {
-  mediaRecorder.stop();
-  startBtn.disabled = false;
-  stopBtn.disabled = true;
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+    startBtn.disabled = false;
+    stopBtn.disabled = true;
+  }
 };

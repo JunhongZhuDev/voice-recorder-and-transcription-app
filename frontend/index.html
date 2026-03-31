@@ -1,16 +1,61 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Voice Recorder</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Recorder & Transcription</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+      text-align: center;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+    }
+    button:disabled {
+      background-color: #a5d6a7;
+      cursor: not-allowed;
+    }
+    audio {
+      margin-top: 20px;
+      width: 100%;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+      min-height: 40px;
+    }
+  </style>
 </head>
 <body>
 
-  <h1>Voice Recorder</h1>
+  <h1>Voice Recorder & Transcription</h1>
 
-  <button id="start">Start</button>
-  <button id="stop" disabled>Stop</button>
+  <button id="start">Start Recording</button>
+  <button id="stop" disabled>Stop Recording</button>
+
+  <p>Playback:</p>
+  <audio id="audioPlayback" controls></audio>
+
+  <p>Transcription:</p>
+  <p id="result">Your text will appear here...</p>
 
   <script src="script.js"></script>
-
 </body>
 </html>
