@@ -1,6 +1,8 @@
 # Voice Recorder & Transcription App
 
-This project is developed based on, just add a transcription function:
+This project is an evolution of the Voice Recorder App.
+https://github.com/JunhongZhuDev/voice-recorder-app.git
+It builds upon the original recording capabilities by adding an automated transcription feature powered by OpenAI's Whisper:
 
 - 🎤 Record your voice directly in the browser
 - 🔊 Play back your recordings
@@ -19,6 +21,3 @@ This project is developed based on, just add a transcription function:
 - Simple, responsive frontend
 
 ---
-
-## Project Structure
-
