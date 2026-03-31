@@ -57,7 +57,7 @@ backend/uploads/
 - Browser support: Chrome, Edge, Firefox
 - .webm is used for recording and converted to .wav on the backend
 
-##
+## Acknowledgements
 - MediaRecorder API
 - Flask
 - pydub
